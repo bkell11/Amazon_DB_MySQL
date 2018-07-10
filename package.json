@@ -1,0 +1,23 @@
+{
+  "name": "amazon_db_mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkell11/Amazon_DB_MySQL.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkell11/Amazon_DB_MySQL/issues"
+  },
+  "homepage": "https://github.com/bkell11/Amazon_DB_MySQL#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0",
+    "my-sql": "^1.2.15"
+  }
+}
