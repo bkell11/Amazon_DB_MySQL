@@ -18,6 +18,7 @@
   "homepage": "https://github.com/bkell11/Amazon_DB_MySQL#readme",
   "dependencies": {
     "inquirer": "^6.0.0",
-    "my-sql": "^1.2.15"
+    "my-sql": "^1.2.15",
+    "mysql": "^2.15.0"
   }
 }
