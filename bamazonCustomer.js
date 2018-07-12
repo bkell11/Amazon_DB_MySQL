@@ -3,13 +3,11 @@ var mysql = require("mysql");
 var connection = mysql.createConnection({
     host: "localhost",
 
-    // Your port; if not 3306
+
     port: 3306,
 
-    // Your username
     user: "root",
 
-    // Your password
     password: "root",
     database: "bamazon_db"
 });
@@ -26,26 +24,72 @@ function showProducts() {
         for (var i = 0; i < res.length; i++) {
             console.log(res[i].id + "-" + res[i].product_name + ", " + res[i].department_name + " " + res[i].price);
         }
+    });
+    connection.query("SELECT id FROM products", function (err, res) {
+        if (err) throw err;
 
         inquirer
-            .prompt({
-                name: "itemChoice",
-                type: "list",
-                choices: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                message: "What item ID would you like to buy?"
-            },
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < res.length; i++) {
+                            choiceArray.push(JSON.parse(res[i].id));
+                        }
+                        return choiceArray;
+                    },
+                    message: "What item would you like to buy?"
+                },
                 {
                     name: "quantity",
                     type: "input",
                     message: "How many would you like to buy?"
                 }
-            )
+            ])
             .then(function (answer) {
 
-                console.log(answer.itemChoice = answer.quatity);
+                var chosenId;
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].id === answer.choice) {
+                        chosenId = res[i];
+                    }
+                }
+
+                if (chosenId.quantity > parseInt(answer.quantity)) {
+                    chosenId.quantity -= answer.quantity;
+                    connection.query(
+                        "UPDATE products SET ? WHERE ?",
+                        [
+                            {
+                                quantity: chosenId.quantity
+                            },
+                            {
+                                id: chosenId.id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+                        }
+                    );
+                    connection.query("SELECT price FROM products where ?",
+                        {
+                            id: chosenId.id
+
+                        }, function (err, res) {
+                            if (err) throw err;
+                            var total = chosenId.price;
+                            total *= answer.quantity;
+                            console.log("Thank you for your purchase! Your total is: " + total);
+                        });
+                }
+                else {
+
+                    console.log("Sorry we don't have that many of this item!");
+                    showProducts();
+                }
             });
     });
 }
-
-
 // connection.end();
